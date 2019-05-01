@@ -23,7 +23,31 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <header style="max-width:800px;margin:0 auto"><h1>React バリデート（use Typescript）</h1></header>
+    <main style="max-width:800px;margin:0 auto;">
+      <div style="width:800px;margin:48px auto 0;">
+        <div id="root"></div>
+      </div>
+      <section class="description">
+        <h2 class="description__title">概要</h2>
+        <ul>
+          <li>入力フォームの値を変更するとバリデーションを実行します。</li>
+          <li>送信ボタンを押下すると、定義されたルールに従い全項目をバリデーションします。</li>
+        </ul>
+        <h2 class="description__title">目的</h2>
+        <p>下記2点を学べる課題として、バリデーションを作成。</p>
+        <ul>
+          <li></li>
+          <li>React.js hooks、typescriptの練習</li>
+        </ul>
+        <h2 class="description__title">はまったポイント</h2>
+        <ul>
+          <li></li>
+          <li>途中まで、ReactDOM.findDOMNode()で実装してしまう。refに移行しようとしたものの、うまく機能せず試行錯誤。公式ドキュメントの「Refs and the DOM」を読んで解決。</li>
+          <li>typescriptでclickのeventの型がわからないまま</li>
+        </ul>
+      </section>
+    </main>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
