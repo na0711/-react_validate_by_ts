@@ -14,8 +14,6 @@ type InputProps = {
   value?: Val;
   rule?: string;
   placeholder: string;
-  saveState: React.Dispatch<React.SetStateAction<IValidate>>;
-  state: IValidate;
 };
 type RadioProps = {
   name: string;
@@ -26,8 +24,6 @@ type RadioProps = {
     value: Val;
     label: Val;
   }[];
-  saveState: React.Dispatch<React.SetStateAction<IValidate>>;
-  state: IValidate;
 };
 type CheckboxProps = {
   name: string;
@@ -38,8 +34,6 @@ type CheckboxProps = {
     value: Val;
     label: Val;
   }[];
-  saveState: React.Dispatch<React.SetStateAction<IValidate>>;
-  state: IValidate;
 };
 type SelectProps = {
   name: string;
@@ -49,8 +43,6 @@ type SelectProps = {
     value: Val;
     label: Val;
   }[];
-  saveState: React.Dispatch<React.SetStateAction<IValidate>>;
-  state: IValidate;
 };
 type IconProps = {
   label: string;
@@ -166,28 +158,26 @@ const Input: React.FC<RadioProps | CheckboxProps | InputProps> = props => {
 };
 
 const InputText: React.FC<InputProps> = props => {
+  const [state, saveState] = useState();
   return (
     <div className="form__wrap">
       <input
         type={props.type}
         name={props.name}
-        value={props.state[props.name]!.value}
+        value={state[props.name]!.value}
         placeholder={props.placeholder}
         onChange={e => handleChange(e, props)}
         className="form__input"
       />
-      <div
-        className={`form__error ${
-          props.state[props.name].err ? "is-error" : ""
-        }`}
-      >
-        {props.state[props.name].err}
+      <div className={`form__error ${state[props.name].err ? "is-error" : ""}`}>
+        {state[props.name].err}
       </div>
     </div>
   );
 };
 
 const InputRadio: React.FC<RadioProps> = props => {
+  const [state, saveState] = useState();
   return (
     <div className="">
       {props.items.map(item => {
@@ -204,18 +194,15 @@ const InputRadio: React.FC<RadioProps> = props => {
           </label>
         );
       })}
-      <div
-        className={`form__error ${
-          props.state[props.name].err ? "is-error" : ""
-        }`}
-      >
-        {props.state[props.name].err}
+      <div className={`form__error ${state[props.name].err ? "is-error" : ""}`}>
+        {state[props.name].err}
       </div>
     </div>
   );
 };
 
 const InputCheckbox: React.FC<CheckboxProps> = props => {
+  const [state, saveState] = useState();
   return (
     <div className="">
       {props.items.map(item => {
@@ -232,24 +219,21 @@ const InputCheckbox: React.FC<CheckboxProps> = props => {
           </label>
         );
       })}
-      <div
-        className={`form__error ${
-          props.state[props.name].err ? "is-error" : ""
-        }`}
-      >
-        {props.state[props.name].err}
+      <div className={`form__error ${state[props.name].err ? "is-error" : ""}`}>
+        {state[props.name].err}
       </div>
     </div>
   );
 };
 
 const Select: React.FC<SelectProps> = props => {
+  const [state, saveState] = useState();
   return (
     <div className="form__wrap">
       <label className="form__select-wrap">
         <select
           name={props.name}
-          value={props.state[props.name].value}
+          value={state[props.name].value}
           onChange={e => handleChange(e, props)}
           className="form__select"
         >
@@ -262,12 +246,8 @@ const Select: React.FC<SelectProps> = props => {
           })}
         </select>
       </label>
-      <div
-        className={`form__error ${
-          props.state[props.name].err ? "is-error" : ""
-        }`}
-      >
-        {props.state[props.name].err}
+      <div className={`form__error ${state[props.name].err ? "is-error" : ""}`}>
+        {state[props.name].err}
       </div>
     </div>
   );
@@ -283,6 +263,7 @@ const handleChange = (
     InputProps | RadioProps | CheckboxProps | SelectProps
   >
 ) => {
+  const [state, saveState] = useState();
   const val = event.currentTarget.value;
   let errMsg = "";
   // ルール定義がある場合のみ実行
@@ -293,18 +274,16 @@ const handleChange = (
       errMsg = rule.msg[result];
     }
   }
-  const newState = { ...props.state };
+  const newState = { ...state };
   newState[props.name] = {
     value: val,
     err: errMsg
   };
-  props.saveState(newState);
+  saveState(newState);
 };
 
-const handleClick = (
-  state: IValidate,
-  saveState: React.Dispatch<React.SetStateAction<IValidate>>
-) => {
+const handleClick = () => {
+  const [state, saveState] = useState();
   const nameArr = Object.keys(state);
   const newState = { ...state };
   nameArr.forEach(name => {
@@ -345,14 +324,7 @@ const Validate: React.FC = () => {
               <Icon className="icon--require" label="必須" />
             </th>
             <td className="table__td">
-              <Input
-                name="namae"
-                type="text"
-                value=""
-                placeholder="お名前"
-                state={state}
-                saveState={saveState}
-              />
+              <Input name="namae" type="text" value="" placeholder="お名前" />
             </td>
           </tr>
           <tr>
@@ -363,8 +335,6 @@ const Validate: React.FC = () => {
                 type="text"
                 value=""
                 placeholder="フリガナ"
-                state={state}
-                saveState={saveState}
               />
             </td>
           </tr>
@@ -379,8 +349,6 @@ const Validate: React.FC = () => {
                   { value: 0, label: "男性" },
                   { value: 1, label: "女性" }
                 ]}
-                state={state}
-                saveState={saveState}
               />
             </td>
           </tr>
@@ -397,8 +365,6 @@ const Validate: React.FC = () => {
                   { value: "", label: "選択してください" },
                   { value: 1, label: "北海道" }
                 ]}
-                state={state}
-                saveState={saveState}
               />
             </td>
           </tr>
@@ -410,16 +376,12 @@ const Validate: React.FC = () => {
                 type="email"
                 value=""
                 placeholder="example@example.com"
-                state={state}
-                saveState={saveState}
               />
               <Input
                 name="mailmag"
                 type="checkbox"
                 value=""
                 items={[{ value: 1, label: "メールマガジンを受け取る" }]}
-                state={state}
-                saveState={saveState}
               />
             </td>
           </tr>
@@ -428,7 +390,7 @@ const Validate: React.FC = () => {
       <div className="btn__wrap">
         <button
           className="btn--submit"
-          onClick={() => handleClick(state, saveState)}
+          onClick={() => handleClick()}
           disabled={errFlg}
         >
           送信
