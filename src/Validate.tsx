@@ -14,7 +14,7 @@ type InputProps = {
   value?: Val;
   rule?: string;
   placeholder: string;
-  saveState: any;
+  saveState: React.Dispatch<React.SetStateAction<IValidate>>;
   state: IValidate;
 };
 type RadioProps = {
@@ -26,7 +26,7 @@ type RadioProps = {
     value: Val;
     label: Val;
   }[];
-  saveState: any;
+  saveState: React.Dispatch<React.SetStateAction<IValidate>>;
   state: IValidate;
 };
 type CheckboxProps = {
@@ -38,7 +38,7 @@ type CheckboxProps = {
     value: Val;
     label: Val;
   }[];
-  saveState: any;
+  saveState: React.Dispatch<React.SetStateAction<IValidate>>;
   state: IValidate;
 };
 type SelectProps = {
@@ -49,7 +49,7 @@ type SelectProps = {
     value: Val;
     label: Val;
   }[];
-  saveState: any;
+  saveState: React.Dispatch<React.SetStateAction<IValidate>>;
   state: IValidate;
 };
 type IconProps = {
@@ -277,7 +277,12 @@ const Icon = (props: IconProps) => {
   return <span className={props.className}>{props.label}</span>;
 };
 
-const handleChange = (event: any, props: any) => {
+const handleChange = (
+  event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  props: React.PropsWithChildren<
+    InputProps | RadioProps | CheckboxProps | SelectProps
+  >
+) => {
   const val = event.currentTarget.value;
   let errMsg = "";
   // ルール定義がある場合のみ実行
@@ -296,7 +301,10 @@ const handleChange = (event: any, props: any) => {
   props.saveState(newState);
 };
 
-const handleClick = (state: IValidate, saveState: any) => {
+const handleClick = (
+  state: IValidate,
+  saveState: React.Dispatch<React.SetStateAction<IValidate>>
+) => {
   const nameArr = Object.keys(state);
   const newState = { ...state };
   nameArr.forEach(name => {
